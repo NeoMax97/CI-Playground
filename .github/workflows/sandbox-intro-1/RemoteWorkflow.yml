@@ -1,0 +1,23 @@
+# This is a Remote Workflow
+# This file represents a file from another repo
+# We setup a list of jobs here, which can be called from another Workflow file
+# Think of it like a function, that you call from another function
+# REMEMBER: This file must be in a public repo if you want to use this from another repo
+
+# Here, we setup a simple 'echo' command, which takes an input 'custom_message'
+# The input comes from a Local Workflow
+
+name: Remote Workflow
+on:
+  workflow_call:
+    inputs:
+      custom_message:
+        required: true
+        type: string
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Custom Message
+        run: echo "${{inputs.custom_message}}"
