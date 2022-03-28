@@ -1,0 +1,15 @@
+# This is a Local Workflow
+# This file represents a file in our own repo
+# This is where we would use a workflow from another repo
+
+# REMEMBER: You can only use workflows from public repos.
+
+name: Local Workflow
+on:
+  workflow_dispatch:
+
+jobs:
+  greeting:
+    uses: NeoMax97/CI-Playground/.github/workflows/sandbox-intro-1/RemoteWorkflow.yml@main
+    with:
+      custom_message: "Hello World!"
