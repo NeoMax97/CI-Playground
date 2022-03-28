@@ -10,6 +10,6 @@ on:
 
 jobs:
   greeting:
-    uses: NeoMax97/CI-Playground/.github/workflows/sandbox-intro-1/RemoteWorkflow.yml@main
+    uses: NeoMax97/CI-Playground/.github/workflows/RemoteWorkflow.yml@main
     with:
       custom_message: "Hello World!"
