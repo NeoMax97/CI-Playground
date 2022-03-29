@@ -13,6 +13,7 @@ jobs:
         with:
           node-version: lts/gallium
           cache: "yarn"
+          cache-dependency-path: "yarn.lock"
 
       - name: Frontend Code Quality
         run: |
