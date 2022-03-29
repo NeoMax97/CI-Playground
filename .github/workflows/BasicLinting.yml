@@ -17,4 +17,4 @@ jobs:
       - name: Frontend Code Quality
         run: |
           yarn
-          yarn run eslint src/basiclinting.js
+          yarn lint
