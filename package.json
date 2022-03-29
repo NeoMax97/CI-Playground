@@ -1,0 +1,12 @@
+{
+  "name": "CI-Playground",
+  "version": "1.0.0",
+  "main": "src/basiclinting.js",
+  "repository": "git@github.com:NeoMax97/CI-Playground.git",
+  "author": "Sidharth Subramanian <sidharth.subramanian.97@gmail.com>",
+  "license": "MIT",
+  "scripts": {},
+  "devDependencies": {
+    "eslint": "^8.12.0"
+  }
+}
