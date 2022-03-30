@@ -16,4 +16,5 @@ jobs:
       - name: "Run React Tests"
         run: |
           cd react/ci-playground
+          yarn
           yarn test
