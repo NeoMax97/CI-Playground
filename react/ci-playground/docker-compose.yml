@@ -1,0 +1,11 @@
+version: "3.5"
+
+services:
+  app:
+    image: node:14-alpine
+    command: sh -c "yarn && yarn start"
+    ports:
+      - 3000:3000
+    working_dir: /ci-playground
+    volumes:
+      - ./:/ci-playground
