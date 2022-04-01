@@ -14,8 +14,14 @@ jobs:
           JIRA_USER_EMAIL: ${{ secrets.JIRA_USER_EMAIL }}
           JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
       - name: Comment on issue
+        id: jira-comment
         uses: atlassian/gajira-comment@master
         with:
           issue: GCE-96
           # comment: ${{ github.event.pusher.name }} pushed to repository: ${{ github.event.repository.full_name }}
           comment: "@Sidharth Subramanian, please have a look"
+      - name: Transition issue
+        uses: atlassian/gajira-transition@master
+        with:
+          issue: ${{ steps.jira-comment.inputs.issue }}
+          transition: "Selected For Development"
