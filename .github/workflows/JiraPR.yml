@@ -1,0 +1,13 @@
+name: JIRA PR
+on: pull_request
+
+jobs:
+  Jira-PR:
+    if: github.actor != 'dependabot[bot]' # to avoid running it on Dependabot PRs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add Jira Ticket to PR
+        uses: onrunning/jira-pr-action@v1
+        with:
+          jira-account: axelerant
+          ticket-regex: ^GCE-\d+
