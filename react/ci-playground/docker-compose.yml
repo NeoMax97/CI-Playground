@@ -2,7 +2,8 @@ version: "3.5"
 
 services:
   app:
-    image: node:14-alpine
+    # image: node:14-alpine
+    image: node:16-buster-slim
     command: sh -c "yarn && yarn start"
     ports:
       - 3000:3000

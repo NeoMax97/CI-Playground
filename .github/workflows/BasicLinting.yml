@@ -12,8 +12,10 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: lts/gallium
-          cache: "yarn"
-          cache-dependency-path: "yarn.lock"
+          # Comment out the two lines of code below when running act
+          # Remember to uncomment them before pushing your changes
+          cache: yarn
+          cache-dependency-path: package-lock.json
 
       - name: Frontend Code Quality
         run: |
