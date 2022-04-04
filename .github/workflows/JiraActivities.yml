@@ -1,0 +1,37 @@
+name: Jira Activities
+on: ["pull_request"]
+
+jobs:
+  JiraLogin:
+    if: github.actor != 'dependabot[bot]' # to avoid running it on Dependabot PRs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Login
+        uses: atlassian/gajira-login@master
+        env:
+          # The following secrets have been setup on the Github repo
+          JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
+          JIRA_USER_EMAIL: ${{ secrets.JIRA_USER_EMAIL }}
+          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+
+      - name: Extract Jira Id
+        id: step1
+        uses: AsasInnab/regex-action@v1
+        with:
+          regex_pattern: 'GCE-\d+'
+          regex_flags: "gim"
+          search_string: "${{ github.head_ref }}"
+
+      - name: Comment on issue
+        id: jira-comment
+        uses: atlassian/gajira-comment@master
+        with:
+          issue: ${{ steps.step1.outputs.first_match }}
+          # comment: ${{ github.event.pusher.name }} pushed to repository: ${{ github.event.repository.full_name }}
+          comment: "@Sidharth Subramanian, please have a look"
+
+      - name: Transition issue
+        uses: atlassian/gajira-transition@master
+        with:
+          issue: ${{ steps.step1.outputs.first_match }}
+          transition: "In Progress"

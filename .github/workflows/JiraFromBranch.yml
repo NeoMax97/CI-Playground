@@ -1,0 +1,31 @@
+name: Jira Ticket from Branch Name
+on:
+  workflow_call:
+    inputs:
+      branch_name:
+        type: string
+        required: true
+      jira_id_regex:
+        type: string
+        required: true
+    outputs:
+      jira_id:
+        description: The Jira Issue ID that can be passed to other actions
+        value: ${{ jobs.GetJiraId.outputs.jira_id }}
+
+jobs:
+  GetJiraId:
+    runs-on: ubuntu-latest
+    outputs:
+      jira_id: ${{ steps.step1.outputs.jira_id }}
+    steps:
+      - name: Extract Jira Id
+        id: step1
+        uses: AsasInnab/regex-action@v1
+        with:
+          regex_pattern: 'GCE-\d+'
+          regex_flags: "gim"
+          search_string: "GCE-96-CI-actions-Jira"
+
+      - name: Confirm Jira Id
+        run: echo "${{ steps.step1.outputs.first_match }}"
