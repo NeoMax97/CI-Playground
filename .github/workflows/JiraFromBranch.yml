@@ -21,12 +21,11 @@ jobs:
     steps:
       - name: Extract Jira Id
         id: step1
-        # run: |
-        #   b_name=($(echo ${{ inputs.branch_name }} | tr "-"))
-        #   echo "::set-output name=jira_id::${b_name[0]}'-'${b_name}[1]"
-        # run: echo "::set-output name=jira_id::$(echo 'GCE-96-CI-actions-Jira' | grep -Eo 'GCE-\d+')"
-        run: echo "jira_id=$(echo 'GCE-96-CI-actions-Jira' | grep -Eo 'GCE-\d+')" >> $GITHUB_ENV
+        uses: AsasInnab/regex-action@v1
+        with:
+          regex_pattern: 'GCE-\d+'
+          regex_flags: "gim"
+          search_string: "GCE-96-CI-actions-Jira"
 
       - name: Confirm Jira Id
-        # run: echo "${{ steps.step1.outputs.jira_id }}"
-        run: echo "${{ env.jira_id }}"
+        run: echo "${{ steps.step1.outputs.first_match }}"

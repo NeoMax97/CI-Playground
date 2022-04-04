@@ -2,18 +2,9 @@ name: Jira Activities
 on: ["pull_request"]
 
 jobs:
-  GetJiraFromBranch:
-    uses: NeoMax97/CI-Playground/.github/workflows/JiraFromBranch.yml@GCE-96-CI-actions-Jira
-    with:
-      branch_name: ${{ github.head_ref }}
-      jira_id_regex: 'GCE-\d+'
-
   JiraLogin:
     if: github.actor != 'dependabot[bot]' # to avoid running it on Dependabot PRs
     runs-on: ubuntu-latest
-    # needs: GetJiraFromBranch
-    # outputs:
-    #   jira_id: ${{ steps.step1.outputs.jira_id }}
     steps:
       - name: Login
         uses: atlassian/gajira-login@master
@@ -25,23 +16,22 @@ jobs:
 
       - name: Extract Jira Id
         id: step1
-        # Replace grep regex below with your ticket regex
-        run: echo "::set-output name=jira_id::$(echo '${{ github.head_ref }}' | grep -Eo 'GCE-\d+')"
-
-      - name: Confirm Jira Id via echo
-        # Replace grep regex below with your ticket regex
-        run: echo "${{ steps.step1.outputs.jira_id }}"
+        uses: AsasInnab/regex-action@v1
+        with:
+          regex_pattern: 'GCE-\d+'
+          regex_flags: "gim"
+          search_string: "${{ github.head_ref }}"
 
       - name: Comment on issue
         id: jira-comment
         uses: atlassian/gajira-comment@master
         with:
-          issue: GCE-96
+          issue: ${{ steps.step1.outputs.first_match }}
           # comment: ${{ github.event.pusher.name }} pushed to repository: ${{ github.event.repository.full_name }}
           comment: "@Sidharth Subramanian, please have a look"
 
       - name: Transition issue
         uses: atlassian/gajira-transition@master
         with:
-          issue: ${{ steps.step1.outputs.jira_id }}
+          issue: ${{ steps.step1.outputs.first_match }}
           transition: "In Progress"
