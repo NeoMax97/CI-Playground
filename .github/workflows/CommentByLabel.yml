@@ -1,16 +1,11 @@
-name: Jira Activities
-on: ["pull_request"]
+name: Comment by Label
+on:
+  pull_request:
+    types:
+      - labeled
+      - unlabeled
 
 jobs:
-  triage:
-    permissions:
-      contents: read
-      pull-requests: write
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/labeler@v4
-        with:
-          repo-token: "${{ secrets.GITHUB_TOKEN }}"
   JiraLogin:
     if: github.actor != 'dependabot[bot]' # to avoid running it on Dependabot PRs
     runs-on: ubuntu-latest
@@ -31,13 +26,27 @@ jobs:
           regex_flags: "gim"
           search_string: "${{ github.head_ref }}"
 
-      - name: Comment on issue
-        id: jira-comment
+      - name: Echo label(s)
+        run: |
+          echo "label(s): ${{ github.event.label.name }}"
+
+      - name: Comment on issue (FE)
+        if: ${{ github.event.label.name == 'frontend' }}
+        id: jira-comment-fe
         uses: atlassian/gajira-comment@master
         with:
           issue: ${{ steps.step1.outputs.first_match }}
           # comment: ${{ github.event.pusher.name }} pushed to repository: ${{ github.event.repository.full_name }}
-          comment: "@Sidharth Subramanian, please have a look"
+          comment: "@Sidharth Subramanian, please have a look (FE)"
+
+      - name: Comment on issue (BE)
+        if: ${{ github.event.label.name == 'backend' }}
+        id: jira-comment-be
+        uses: atlassian/gajira-comment@master
+        with:
+          issue: ${{ steps.step1.outputs.first_match }}
+          # comment: ${{ github.event.pusher.name }} pushed to repository: ${{ github.event.repository.full_name }}
+          comment: "@Sidharth Subramanian, please have a look (BE)"
 
       - name: Transition issue
         uses: atlassian/gajira-transition@master
